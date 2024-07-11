@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Navigation Header"
+        android:text="@string/navigation_header"
         android:textColor="@android:color/white"
         android:textSize="18sp" />
 

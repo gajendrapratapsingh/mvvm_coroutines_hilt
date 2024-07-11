@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
             }
         } else {
             val rootView = findViewById<View>(android.R.id.content)
-            appUtils.showSnackbar("Please check your internet connection!!", Snackbar.LENGTH_LONG, rootView)
+            appUtils.showSnackbar(getString(R.string.connection), Snackbar.LENGTH_LONG, rootView)
             //Toast.makeText(this, "Please check your internet connection!!", Toast.LENGTH_LONG).show()
         }
     }
