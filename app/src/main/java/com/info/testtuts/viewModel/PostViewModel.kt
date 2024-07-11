@@ -10,18 +10,34 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+sealed class PostViewState {
+    object Loading : PostViewState()
+    data class Success(val posts: List<Post>) : PostViewState()
+    data class Error(val message: String) : PostViewState()
+}
 
 @HiltViewModel
 class PostViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
 
-    private val _posts = MutableLiveData<List<Post>>()
-    val posts: LiveData<List<Post>>
+    private val _posts = MutableLiveData<PostViewState>()
+    val posts: LiveData<PostViewState>
         get() = _posts
 
     init {
+        fetchPosts()
+    }
+
+    private fun fetchPosts() {
         viewModelScope.launch {
-            _posts.value = repository.getPosts()
+            _posts.value = PostViewState.Loading
+            try {
+                val fetchedPosts = repository.getPosts()
+                _posts.value = PostViewState.Success(fetchedPosts)
+            } catch (e: Exception) {
+                _posts.value = PostViewState.Error(e.message ?: "Unknown error")
+            }
         }
     }
 }
+
 
