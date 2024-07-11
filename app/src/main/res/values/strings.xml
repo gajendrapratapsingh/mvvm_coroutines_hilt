@@ -2,4 +2,8 @@
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
     <string name="app_name">TestTuts</string>
+    <string name="item_1">Item 1</string>
+    <string name="my_order">My Order</string>
+    <string name="home">Home</string>
+    <string name="privacy_policy">Privacy Policy</string>
 </resources>

@@ -76,15 +76,15 @@ class MainActivity : AppCompatActivity() {
 
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.nav_item1 -> {
+                R.id.home -> {
                     binding.drawerLayout.closeDrawer(binding.navigationView)
                     true
                 }
-                R.id.nav_item2 -> {
+                R.id.order -> {
                     // Handle navigation item 2 click
                     true
                 }
-                R.id.nav_item3 -> {
+                R.id.policy -> {
                     // Handle navigation item 3 click
                     true
                 }
