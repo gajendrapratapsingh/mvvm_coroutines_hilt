@@ -3,24 +3,20 @@ package com.info.testtuts
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
+
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
+
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
+
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.navigation.NavigationView
+
 import com.info.testtuts.adapters.PostAdapter
 import com.info.testtuts.databinding.ActivityMainBinding
 import com.info.testtuts.viewModel.PostViewModel
 import com.info.testtuts.viewModel.PostViewState
 import dagger.hilt.android.AndroidEntryPoint
-import org.w3c.dom.Text
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -28,8 +24,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel: PostViewModel by viewModels()
     private lateinit var postAdapter: PostAdapter
-
-    private lateinit var postText : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_item1 -> {
-                    // Handle navigation item 1 click
+                    binding.drawerLayout.closeDrawer(binding.navigationView)
                     true
                 }
                 R.id.nav_item2 -> {
