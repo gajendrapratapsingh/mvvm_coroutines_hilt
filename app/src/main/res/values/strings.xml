@@ -8,4 +8,7 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="connection">Please check your internet connection!!</string>
     <string name="navigation_header">Navigation Header</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="setting_fragment_text">Settings fragment</string>
+    <string name="notification_fragment_text">Notifications fragment</string>
 </resources>

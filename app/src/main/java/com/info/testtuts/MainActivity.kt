@@ -9,6 +9,11 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import androidx.navigation.ui.setupWithNavController
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -25,10 +30,12 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val viewModel: PostViewModel by viewModels()
-    private lateinit var postAdapter: PostAdapter
+    //private val viewModel: PostViewModel by viewModels()
+    //private lateinit var postAdapter: PostAdapter
 
-    private lateinit var appUtils: AppUtils
+    //private lateinit var appUtils: AppUtils
+
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,41 +44,52 @@ class MainActivity : AppCompatActivity() {
 
         setupNavigationDrawer()
 
-        setupRecyclerView()
+        // Initialize NavController
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
 
-        appUtils = AppUtils.getInstance(window.decorView.rootView)
+        //appUtils = AppUtils.getInstance(window.decorView.rootView)
 
-        if(ConnectivityHelper.isConnectedToInternet(this)) {
-            viewModel.posts.observe(this) { state ->
-                when(state) {
-                    is PostViewState.Loading -> {
-                        // Show progress bar or loading indicator
-                        binding.progressBar.visibility = View.VISIBLE
-                        binding.recyclerView.visibility = View.GONE
-                    }
-                    is PostViewState.Success -> {
-                        // Hide progress bar
-                        binding.progressBar.visibility = View.GONE
-                        binding.recyclerView.visibility = View.VISIBLE
-                        // Update UI with fetched posts
-                        //postText = state.posts.joinToString("\n") { "Title: ${it.title}, Body: ${it.body}" }
-                        postAdapter.setPosts(state.posts)
-                    }
+        binding.bottomNavigationView.setupWithNavController(navController)
 
-                    is PostViewState.Error -> {
-                        // Hide progress bar
-                        binding.progressBar.visibility = View.GONE
-                        binding.recyclerView.visibility = View.GONE
-                        // Display error message or handle error state
-                        Toast.makeText(this@MainActivity, "Error: ${state.message}", Toast.LENGTH_SHORT).show()
+        binding.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    //Toast.makeText(this, navController.currentDestination?.label.toString(), Toast.LENGTH_LONG).show()
+                    if(navController.currentDestination?.label.toString() == "fragment_notifications") {
+                        navController.navigate(R.id.action_notificationsFragment_to_homeFragment)
                     }
+                    else{
+                        navController.navigate(R.id.action_settingsFragment_to_homeFragment)
+                    }
+                    true
                 }
+                R.id.navigation_notifications -> {
+                    if(navController.currentDestination?.label.toString() == "fragment_home") {
+                        navController.navigate(R.id.action_homeFragment_to_notificationsFragment)
+                    }
+                    else{
+                        navController.navigate(R.id.action_settingsFragment_to_notificationsFragment)
+                    }
+                    true
+                }
+                R.id.navigation_settings -> {
+                    if(navController.currentDestination?.label.toString() == "fragment_home") {
+                        navController.navigate(R.id.action_homeFragment_to_settingsFragment)
+                    }
+                    else{
+                        navController.navigate(R.id.action_notificationsFragment_to_settingsFragment)
+                    }
+                    true
+                }
+                else -> false
             }
-        } else {
-            val rootView = findViewById<View>(android.R.id.content)
-            appUtils.showSnackbar(getString(R.string.connection), Snackbar.LENGTH_LONG, rootView)
-            //Toast.makeText(this, "Please check your internet connection!!", Toast.LENGTH_LONG).show()
         }
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
     private fun setupNavigationDrawer() {
@@ -114,14 +132,5 @@ class MainActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun setupRecyclerView() {
-        postAdapter = PostAdapter()
-        binding.recyclerView.apply {
-            adapter = postAdapter
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            // Optionally, add item decorations, animations, etc.
-        }
     }
 }
