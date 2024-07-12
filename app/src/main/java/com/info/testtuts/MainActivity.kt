@@ -26,6 +26,9 @@ import com.info.testtuts.viewModel.PostViewModel
 import com.info.testtuts.viewModel.PostViewState
 import dagger.hilt.android.AndroidEntryPoint
 
+
+//https://fakestoreapi.com/products
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -56,30 +59,33 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.navigation_home -> {
                     //Toast.makeText(this, navController.currentDestination?.label.toString(), Toast.LENGTH_LONG).show()
-                    if(navController.currentDestination?.label.toString() == "fragment_notifications") {
-                        navController.navigate(R.id.action_notificationsFragment_to_homeFragment)
-                    }
-                    else{
-                        navController.navigate(R.id.action_settingsFragment_to_homeFragment)
-                    }
+                    navController.navigate(R.id.homeFragment)
+//                    if(navController.currentDestination?.label.toString() == "fragment_notifications") {
+//                        navController.navigate(R.id.action_notificationsFragment_to_homeFragment)
+//                    }
+//                    else{
+//                        navController.navigate(R.id.action_settingsFragment_to_homeFragment)
+//                    }
                     true
                 }
                 R.id.navigation_notifications -> {
-                    if(navController.currentDestination?.label.toString() == "fragment_home") {
-                        navController.navigate(R.id.action_homeFragment_to_notificationsFragment)
-                    }
-                    else{
-                        navController.navigate(R.id.action_settingsFragment_to_notificationsFragment)
-                    }
+                      navController.navigate(R.id.notificationsFragment)
+//                    if(navController.currentDestination?.label.toString() == "fragment_home") {
+//                        navController.navigate(R.id.action_homeFragment_to_notificationsFragment)
+//                    }
+//                    else{
+//                        navController.navigate(R.id.action_settingsFragment_to_notificationsFragment)
+//                    }
                     true
                 }
                 R.id.navigation_settings -> {
-                    if(navController.currentDestination?.label.toString() == "fragment_home") {
-                        navController.navigate(R.id.action_homeFragment_to_settingsFragment)
-                    }
-                    else{
-                        navController.navigate(R.id.action_notificationsFragment_to_settingsFragment)
-                    }
+                    navController.navigate(R.id.settingsFragment)
+//                    if(navController.currentDestination?.label.toString() == "fragment_home") {
+//                        navController.navigate(R.id.action_homeFragment_to_settingsFragment)
+//                    }
+//                    else{
+//                        navController.navigate(R.id.action_notificationsFragment_to_settingsFragment)
+//                    }
                     true
                 }
                 else -> false
@@ -112,9 +118,11 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.order -> {
+                    binding.drawerLayout.closeDrawer(binding.navigationView)
                     true
                 }
                 R.id.policy -> {
+                    binding.drawerLayout.closeDrawer(binding.navigationView)
                     true
                 }
                 else -> false
@@ -132,5 +140,20 @@ class MainActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+
+    override fun onBackPressed() {
+        // Check if the current destination is a fragment that handles onBackPressed()
+        val currentDestination = navController.currentDestination
+        val handled = currentDestination?.id == R.id.settingsFragment || currentDestination?.id == R.id.notificationsFragment
+        if (handled) {
+            // Handle onBackPressed() in fragments as necessary
+            // For example, you might want to pop the back stack or navigate up
+            navController.popBackStack()
+        } else {
+            // If the current destination does not handle onBackPressed(), invoke default behavior
+            super.onBackPressed()
+        }
     }
 }
